@@ -1,0 +1,7 @@
+public class MyApplicationClass extends Application {
+  @override
+  public void onCreate() {
+    super.onCreate();
+    // TODO Put your application initialization code here.
+  }
+}
