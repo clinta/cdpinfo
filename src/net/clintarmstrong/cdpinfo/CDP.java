@@ -5,6 +5,7 @@ public class CDP {
 	public String address;
 	public String remote_port;
 	public String platform;
+	public String vlan_id;
 	
 	public CDP()
 	{
@@ -12,6 +13,7 @@ public class CDP {
 		address = new String();
 		remote_port = new String();
 		platform = new String();
+		vlan_id = new String();
 	}
 	public String toString()
 	{
@@ -20,6 +22,7 @@ public class CDP {
 		sb.append("Address:\t" + address + "\n");
 		sb.append("Remote Port:\t" + remote_port + "\n");
 		sb.append("Platform:\t" + platform + "\n");
+		sb.append("VLAN ID:\t" + vlan_id + "\n");
 		return sb.toString();
 	}
 }
