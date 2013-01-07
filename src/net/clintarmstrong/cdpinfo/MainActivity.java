@@ -14,16 +14,23 @@ import java.util.regex.Matcher;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
+	
+	//Global Variables
+	CDP cdp;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +87,24 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
+        
+        
         return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	//Handle Item selection
+    	switch (item.getItemId())
+    	{
+    	case R.id.menu_settings:
+    		break;
+    	case R.id.menu_copy:
+    		ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
+    		ClipData clip = ClipData.newPlainText("CDP", cdp.toString());
+    		clipboard.setPrimaryClip(clip);
+    	}
+    	return true;
     }
     
     /** Called when the user clicks the Capture button */
@@ -113,8 +137,8 @@ public class MainActivity extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			final String command = "/data/data/net.clintarmstrong.cdpinfo/files/tcpdump -i eth0 -nn -v -s 1500 -c 1 'ether[20:2] == 0x2000'";
-			final String output = "08:23:14.913275 CDPv2, ttl: 180s, checksum: 692 (unverified), length 486\n      Device-ID (0x01), length: 38 bytes: 'C2960S-48LPS-SCORP-M1-5.secantcorp.com'\n     Version String (0x05), length: 248 bytes: \n          Cisco IOS Software, C2960S Software (C2960S-UNIVERSALK9-M), Version 12.2(55)SE1, RELEASE SOFTWARE (fc1)\n         Technical Support: http://www.cisco.com/techsupport\n    Copyright (c) 1986-2010 by Cisco Systems, Inc.\n    Compiled Thu 02-Dec-10 08:43 by prod_rel_team\n Platform (0x06), length: 23 bytes: 'cisco WS-C2960S-48LPS-L'\n  Address (0x02), length: 13 bytes: IPv4 (1) 10.11.252.5\n   Port-ID (0x03), length: 21 bytes: 'GigabitEthernet1/0/39'\n     Capability (0x04), length: 4 bytes: (0x00000028): L2 Switch, IGMP snooping\n      Protocol-Hello option (0x08), length: 32 bytes: \n   VTP Management Domain (0x09), length: 10 bytes: 'SECANTCORP'\n      Native VLAN ID (0x0a), length: 2 bytes: 12\n   Duplex (0x0b), length: 1 byte: full\n   ATA-186 VoIP VLAN request (0x0e), length: 3 bytes: app 1, vlan 19\n AVVID trust bitmap (0x12), length: 1 byte: 0x00\n AVVID untrusted ports CoS (0x13), length: 1 byte: 0x01\n    Management Addresses (0x16), length: 13 bytes: IPv4 (1) 10.11.252.5\n  unknown field type (0x1a), length: 12 bytes: \n      0x0000:  0000 0001 0000 0000 ffff ffff";
-			final CDP cdp = parse(output);
+			final String output = rootExec(command);
+			cdp = parse(output);
 			final TextView txtDeviceID = (TextView)findViewById(R.id.txtDeviceID);
 			final TextView txtAddress = (TextView)findViewById(R.id.txtAddress);
 			final TextView txtPortID = (TextView)findViewById(R.id.txtPortID);
@@ -165,7 +189,7 @@ public class MainActivity extends Activity {
     		data.remote_port = m.group(1);
     	
     	//find VLAN ID
-    	p = Pattern.compile("(Native VLAN ID.*: (\\d+))");
+    	p = Pattern.compile("Native VLAN ID.*: (\\d+)");
     	m = p.matcher(input);
     	if(m.find())
     		data.vlan_id = m.group(1);

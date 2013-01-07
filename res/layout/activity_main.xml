@@ -129,7 +129,6 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/txtPlatform"
             android:layout_alignTop="@+id/TextView04"
-            android:height="100dp"
             android:text="TextView"
             android:width="200dp" />
     </RelativeLayout>
