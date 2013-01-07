@@ -22,6 +22,7 @@ public final class R {
         public static final int TextView05=0x7f08000b;
         public static final int menu_copy=0x7f08000f;
         public static final int menu_settings=0x7f08000e;
+        public static final int menu_share=0x7f080010;
         public static final int start_button=0x7f080001;
         public static final int textView1=0x7f080003;
         public static final int txtAddress=0x7f080006;
