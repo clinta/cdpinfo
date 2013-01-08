@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
         if(!yourFile.exists()) {
         	new CopyTCPDump().execute();
         }
+        invalidateOptionsMenu();
     }
     
     private class CopyTCPDump extends AsyncTask<Void, Void, Void> {
@@ -164,9 +165,10 @@ public class MainActivity extends Activity {
 				}
 			});
 			Intent shareIntent = new Intent();
-			shareIntent.setAction(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_TEXT, cdp.toString());
 			shareIntent.setType("text/plain");
+			shareIntent.setAction(Intent.ACTION_SEND);
+			shareIntent.putExtra(Intent.EXTRA_SUBJECT, "CDP Info");
+			shareIntent.putExtra(Intent.EXTRA_TEXT, cdp.toString());
 			if(mShareActionProvider != null)
 			{
 				mShareActionProvider.setShareIntent(shareIntent);
